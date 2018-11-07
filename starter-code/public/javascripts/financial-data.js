@@ -2,13 +2,17 @@
 // ?currency=<VALUE>The currency to return the data in, specified in ISO 4217 format. Defaults to USD.
 // ?start=<VALUE>&end=<VALUE> Allows data to be returned for a specific date range. Must be listed as a pair of start and end parameters, with dates supplied in the YYYY-MM-DD format, e.g. 2013-09-01 for September 1st, 2013.
 // ?for=yesterdaySpecifying this will return a single value for the previous day. Overrides the start/end parameter.
+const today = new Date()
+
+var dateFrom
+var dateUntil
 
 const coinApi = axios.create({
 //   baseURL: ('https://api.coindesk.com/v1/bpi/historical/close.json' + "?start=" + dateFrom + "&end=" + dateUntil)
   baseURL: ('https://api.coindesk.com/v1/bpi/historical/close.json')
 })
 
-function getData(dateFrom, dateUntil) {
+function getData(dateFrom, dateUntil = today) {
     let parameters = "?start=" + dateFrom + "&end=" + dateUntil
     coinApi.get(parameters)
       .then(response => {
@@ -16,7 +20,7 @@ function getData(dateFrom, dateUntil) {
         const arr = Object.entries(obj)
         printTheChart(arr)
         // console.log(response.data.bpi)
-        console.log(arr)
+        // console.log(arr)
         // console.log(arr[0])
       })
       .catch(err => {
@@ -32,7 +36,7 @@ function printTheChart(stockData) {
         data: {
         labels: stockLabels,
         datasets: [{
-            label: "Stock Chart",
+            label: "Bitcoin Price Index",
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
             data: stockPrice,
@@ -40,6 +44,7 @@ function printTheChart(stockData) {
         }
     });
 };
+
 
 document.getElementById("coinButton").onclick = function () {
     const dateFrom = document.getElementById("date-from").value
